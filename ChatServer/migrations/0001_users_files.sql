@@ -4,6 +4,9 @@ CREATE TABLE users
     username        TEXT        NOT NULL UNIQUE,
     password_hash   TEXT        NOT NULL,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    bio             TEXT,
+    is_online       BOOLEAN              DEFAULT FALSE,
+    last_seen       DATE,
     profile_file_id UUID
 );
 

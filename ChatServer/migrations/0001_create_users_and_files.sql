@@ -1,18 +1,18 @@
 CREATE TABLE users
 (
-    id              UUID PRIMARY KEY,
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username        TEXT        NOT NULL UNIQUE,
     password_hash   TEXT        NOT NULL,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     bio             TEXT,
     is_online       BOOLEAN              DEFAULT FALSE,
-    last_seen       DATE,
+    last_seen       TIMESTAMPTZ,
     profile_file_id UUID
 );
 
 CREATE TABLE files
 (
-    id          UUID PRIMARY KEY,
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     owner_id    UUID        NOT NULL,
     filename    TEXT        NOT NULL,
     mime_type   TEXT,
@@ -28,3 +28,5 @@ ALTER TABLE files
 ALTER TABLE users
     ADD CONSTRAINT fk_users_profile FOREIGN KEY (profile_file_id)
         REFERENCES files (id) ON DELETE SET NULL;
+
+CREATE INDEX idx_files_owner ON files(owner_id);

@@ -1,52 +1,52 @@
+mod api;
 mod db;
+mod error;
+mod models;
+mod routes;
+
+#[derive(Clone)]
+pub struct AppState {
+    pub db: sqlx::PgPool,
+}
 
 #[tokio::main]
-async fn main() -> () {
-    // get the environment variables from the .env file
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Load environment variables
     dotenvy::dotenv().ok();
 
+    // Initialize tracing
     tracing_subscriber::FmtSubscriber::builder()
         .with_max_level(tracing::Level::INFO)
         .compact()
         .init();
 
-    // connect to the database
-    let _db: db::Db = db::Db::new().await.expect("Error with database.");
+    // Database connection
+    tracing::info!("Getting environment variables...");
+    let database_url: String = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    // make the routes
-    let app: axum::Router =
-        axum::Router::new().route("/", axum::routing::get(|| async { "Hello World!" }));
+    tracing::info!("Connecting to database...");
+    let pool: sqlx::Pool<sqlx::Postgres> = sqlx::postgres::PgPoolOptions::new()
+        .max_connections(10)
+        .connect(&database_url)
+        .await?;
+    tracing::info!("Connected to database.");
 
-    // make the socket
+    // Run migrations
+    sqlx::migrate!("./migrations").run(&pool).await?;
+
+    let state = AppState { db: pool };
+
+    // Build router
+    let app: axum::Router = axum::Router::new()
+        .nest("/api", routes::api_routes())
+        .layer(tower_http::cors::CorsLayer::permissive())
+        .with_state(state);
+
     let addr: std::net::SocketAddr = std::net::SocketAddr::from(([127, 0, 0, 1], 3000));
+    tracing::info!("Listening on {}", addr);
 
-    // run the app
-    axum::serve(tokio::net::TcpListener::bind(addr).await.unwrap(), app)
-        .with_graceful_shutdown(shutdown_signal())
-        .await
-        .unwrap();
-}
+    let listener: tokio::net::TcpListener = tokio::net::TcpListener::bind(addr).await?;
+    axum::serve(listener, app).await?;
 
-async fn shutdown_signal() {
-    let ctrl_c= async {
-        tokio::signal::ctrl_c()
-            .await
-            .expect("failed to install Ctrl+C handler");
-    };
-
-    #[cfg(unix)]
-    let terminate = async {
-        tokio::signal::unix::signal(signal::unix::SignalKind::terminate())
-            .expect("failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    #[cfg(not(unix))]
-    let terminate: std::future::Pending<()> = std::future::pending::<()>();
-
-    tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
+    Ok(())
 }

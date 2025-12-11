@@ -1,0 +1,20 @@
+aside {
+    padding: 20px;
+    background-color: #111;
+}
+
+button {
+    border: none;
+    background-color: #444;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-bottom: 10px;
+    border-radius: 100px;
+    width: 100%;
+    font-size: larger;
+}
+
+#find {
+    background-color: #353;
+}

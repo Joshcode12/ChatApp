@@ -1,2 +1,2 @@
 # ChatApp
-Chat application using a rust backend and a WinUI 3 fronted
+Chat application using a rust backend and a WinUI 3 frontend

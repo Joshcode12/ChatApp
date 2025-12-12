@@ -15,4 +15,8 @@ fn user_routes() -> axum::Router<crate::AppState> {
             "/deregister/{id}",
             axum::routing::delete(crate::api::users::deregister_user),
         )
+        .route(
+            "/update",
+            axum::routing::put(crate::api::users::update_user),
+        )
 }

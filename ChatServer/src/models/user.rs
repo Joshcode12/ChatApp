@@ -26,6 +26,7 @@ pub struct UpdateUserRequest {
     pub username: Option<String>,
     pub password: Option<String>,
     pub bio: Option<String>,
+    pub profile_file_id: Option<uuid::Uuid>,
 }
 
 #[derive(Debug, serde::Deserialize)]

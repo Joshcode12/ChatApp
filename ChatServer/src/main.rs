@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Build router
     let app: axum::Router = axum::Router::new()
-        .nest("/api", routes::api_routes())
+        .nest("/chat", routes::api_routes())
         .layer(tower_http::cors::CorsLayer::permissive())
         .with_state(state);
 

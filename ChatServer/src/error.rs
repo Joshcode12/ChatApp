@@ -38,3 +38,87 @@ impl From<sqlx::Error> for AppError {
 }
 
 pub type Result<T> = std::result::Result<T, AppError>;
+
+pub struct DbErrorConfig {
+    pub unique_violations: std::collections::HashMap<String, String>,
+    pub foreign_key_message: Option<String>,
+    pub check_violation_message: Option<String>,
+    pub not_null_message: Option<String>,
+}
+
+impl DbErrorConfig {
+    pub fn new() -> Self {
+        Self {
+            unique_violations: std::collections::HashMap::new(),
+            foreign_key_message: None,
+            check_violation_message: None,
+            not_null_message: None,
+        }
+    }
+
+    pub fn unique(mut self, constraint_name: &str, message: impl Into<String>) -> Self {
+        self.unique_violations
+            .insert(constraint_name.to_string(), message.into());
+        self
+    }
+
+    pub fn foreign_key(mut self, message: impl Into<String>) -> Self {
+        self.foreign_key_message = Some(message.into());
+        self
+    }
+
+    pub fn check_violation(mut self, message: impl Into<String>) -> Self {
+        self.check_violation_message = Some(message.into());
+        self
+    }
+
+    pub fn not_null(mut self, message: impl Into<String>) -> Self {
+        self.not_null_message = Some(message.into());
+        self
+    }
+}
+
+pub fn handle_db_error(error: sqlx::Error, config: DbErrorConfig) -> AppError {
+    match error {
+        sqlx::Error::Database(db_err) => {
+            // Handle unique constraint violations
+            if db_err.is_unique_violation() {
+                if let Some(constraint) = db_err.constraint() {
+                    if let Some(custom_msg) = config.unique_violations.get(constraint) {
+                        return AppError::BadRequest(custom_msg.clone());
+                    }
+                }
+                return AppError::BadRequest(
+                    "A record with this information already exists".to_string(),
+                );
+            }
+
+            if db_err.is_foreign_key_violation() {
+                if let Some(msg) = config.foreign_key_message {
+                    return AppError::BadRequest(msg);
+                }
+                return AppError::BadRequest("Referenced record does not exist".to_string());
+            }
+
+            if db_err.is_check_violation() {
+                if let Some(msg) = config.check_violation_message {
+                    return AppError::BadRequest(msg);
+                }
+                return AppError::BadRequest(format!("Validation failed: {}", db_err.message()));
+            }
+
+            if let Some(code) = db_err.code() {
+                if code.as_ref() == "23502" {
+                    if let Some(msg) = config.not_null_message {
+                        return AppError::BadRequest(msg);
+                    }
+                    return AppError::BadRequest("Required field is missing".to_string());
+                }
+            }
+
+            tracing::error!("Unhandled database error: {:?}", db_err);
+            AppError::Database(sqlx::Error::Database(db_err))
+        }
+        other => AppError::Database(other),
+    }
+}

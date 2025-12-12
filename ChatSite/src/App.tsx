@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Sidebar from './components/sidebar/Sidebar'
-import Chat from './components/chat/Chat'
+import { Outlet } from 'react-router-dom'
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
     return (
         <div className='app-grid'>
             <Sidebar />
-            <Chat />
+            <Outlet />
         </div>
     )
 }

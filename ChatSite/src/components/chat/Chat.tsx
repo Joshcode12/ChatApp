@@ -1,6 +1,11 @@
 import './Chat.css'
 
 function Chat() {
+
+    function hfkjas(){
+        
+    }
+
     return (
         <div className='chat-grid'>
             <header className='maxsize'>
@@ -10,7 +15,13 @@ function Chat() {
                 View chat here
             </section>
             <footer className='maxsize'>
-                <input type="text" name="" id="" placeholder='Message' />
+                <input type="text" name="" id="" placeholder='Message'
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        
+                    }
+                }}
+                />
             </footer>
         </div>
     )

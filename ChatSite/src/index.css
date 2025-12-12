@@ -15,4 +15,16 @@ html, body, #root {
     min-height: 100vh;
     height: 100%;
     overflow: hidden;
+    background: #101010;
+}
+
+button {
+    border: none;
+    background-color: #444;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-bottom: 10px;
+    border-radius: 100px;
+    font-size: larger;
 }

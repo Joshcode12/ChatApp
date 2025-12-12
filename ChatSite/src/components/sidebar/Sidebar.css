@@ -1,20 +1,28 @@
-aside {
-    padding: 20px;
+aside.sidebar {
+    display: grid;
+    grid-template-rows: 84px 0px 1fr 80px;
     background-color: #111;
 }
 
-button {
-    border: none;
-    background-color: #444;
-    padding: 10px;
-    padding-left: 25px;
-    padding-right: 25px;
-    margin-bottom: 10px;
-    border-radius: 100px;
-    width: 100%;
-    font-size: larger;
+aside.sidebar button {
+    width: 100%
 }
 
-#find {
+aside.sidebar #find {
     background-color: #353;
+}
+
+aside.sidebar .pad20 {
+    padding: 20px;
+}
+
+aside.sidebar .pad20h {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+aside.sidebar hr {
+    align-self: center;     /* prevent vertical stretching */
+    justify-self: stretch;  /* keep horizontal stretch */
+    width: 80%;
 }

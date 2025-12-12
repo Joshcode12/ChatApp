@@ -28,3 +28,10 @@ button {
     border-radius: 100px;
     font-size: larger;
 }
+
+.maxsize {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

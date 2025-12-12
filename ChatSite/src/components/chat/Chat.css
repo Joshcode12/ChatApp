@@ -3,13 +3,6 @@
     grid-template-rows: 80px 1fr 80px;
 }
 
-.maxsize {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
 div.chat-grid header {
     background-color: #333;
 }
@@ -22,7 +15,7 @@ div.chat-grid footer {
     background-color: #222;
 }
 
-input[type="text"] {
+div.chat-grid input[type="text"] {
     background-color: #333;
     font-size: large;
     width: 100%;

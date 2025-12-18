@@ -1,17 +1,33 @@
 [package]
-name = "server"
+name = "ChatServer"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+# --- Web Framework & Middleware ---
 axum = { version = "0.8.7", features = ["default"] }
+tower-http = { version = "0.6.8", features = ["cors"] }
+tower-cookies = "0.11.0"
+
+# --- Async Runtime ---
 tokio = { version = "1.48.0", features = ["full"] }
-uuid = { version = "1.19.0", features = ["serde"] }
+
+# --- Database & ORM ---
 sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "postgres", "time", "migrate", "uuid"] }
+
+# --- Serialization ---
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
-tower-http = { version = "0.6.8", features = ["cors"] }
+uuid = { version = "1.19.0", features = ["serde", "v4"] }
+time = { version = "0.3.44", features = ["serde", "macros"] }
+
+# --- Authentication & Security ---
+jsonwebtoken = { version = "10.2.0", features = ["rust_crypto"]}
+bcrypt = "0.17.1"
+
+# --- Logging & Observability ---
 tracing = "0.1.43"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+
+# --- Environment Management ---
 dotenvy = "0.15.7"
-time = { version = "0.3.44", features = ["serde"] }

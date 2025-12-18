@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$PROJECT_DIR$/.idea/queries/Query_1.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0000_extensions.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0001_create_users_and_files.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0002_create_refresh_tokens.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0003_create_conversations.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0004_create_messages.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0005_create_message_read_receipts.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0006_create_message_reactions.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0007_create_typing_indicators.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0008_add_message_soft_delete.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0009_create_useful_functions.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0010_create_indexes_for_performance.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/migrations/0011_add_constraints_and_validation.sql" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/src/db/users.rs" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
-    <file url="file://$PROJECT_DIR$/src/main.rs" value="0f72a4c8-b014-4ac4-964a-4520ed2c8826" />
+    <file url="file://$PROJECT_DIR$/.idea/queries/Query.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0000_extensions.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0001_create_users_and_files.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0002_create_refresh_tokens.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0003_create_conversations.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0004_create_messages.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0005_create_message_read_receipts.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0006_add_message_soft_delete.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/0007_create_useful_functions.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/008_create_indexes_for_performance.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/migrations/009_add_constraints_and_validation.sql" value="db2875a2-9941-4726-9a61-06603f16f24e" />
+    <file url="file://$PROJECT_DIR$/src/db/user.rs" value="db2875a2-9941-4726-9a61-06603f16f24e" />
   </component>
 </project>

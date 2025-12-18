@@ -42,13 +42,3 @@ CREATE TRIGGER message_edited_timestamp
     FOR EACH ROW
     WHEN (NEW.edited = TRUE AND OLD.edited = FALSE)
 EXECUTE FUNCTION update_message_edited_at();
-
-CREATE OR REPLACE FUNCTION cleanup_old_typing_indicators()
-    RETURNS void AS
-$$
-BEGIN
-    DELETE
-    FROM typing_indicators
-    WHERE started_at < now() - INTERVAL '10 seconds';
-END;
-$$ LANGUAGE plpgsql;

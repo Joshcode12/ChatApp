@@ -3,10 +3,11 @@ CREATE TABLE users
     id              UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
     username        TEXT        NOT NULL UNIQUE,
     password_hash   TEXT        NOT NULL,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     bio             TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     is_online       BOOLEAN     NOT NULL DEFAULT FALSE,
     last_seen       TIMESTAMPTZ,
+    admin           BOOLEAN NOT NULL DEFAULT FALSE,
     profile_file_id UUID
 );
 

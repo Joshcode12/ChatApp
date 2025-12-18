@@ -3,6 +3,7 @@ mod db;
 mod error;
 mod models;
 mod routes;
+mod middleware;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -11,7 +12,7 @@ pub struct AppState {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Load environment variables
+    // load the environment variables
     dotenvy::dotenv().ok();
 
     // Initialize tracing
@@ -20,9 +21,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .compact()
         .init();
 
-    // Database connection
-    tracing::info!("Getting environment variables...");
-    let database_url: String = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    // get the database url
+    let database_url: String = std::env::var("DATABASE_URL").expect("Database url must be set");
 
     tracing::info!("Connecting to database...");
     let pool: sqlx::Pool<sqlx::Postgres> = sqlx::postgres::PgPoolOptions::new()
@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Build router
     let app: axum::Router = axum::Router::new()
-        .nest("/chat", routes::api_routes())
+        .nest("/chat", routes::routes())
         .layer(tower_http::cors::CorsLayer::permissive())
         .with_state(state);
 

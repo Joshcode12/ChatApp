@@ -1,1 +1,3 @@
-pub mod users;
+pub mod auth;
+mod error;
+pub mod user;

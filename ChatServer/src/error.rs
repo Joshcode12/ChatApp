@@ -1,3 +1,4 @@
+// enum to  define all the custom application error types
 #[derive(Debug)]
 pub enum AppError {
     Database(sqlx::Error),
@@ -7,6 +8,7 @@ pub enum AppError {
     Internal(String),
 }
 
+// mapping all the errors to http codes and supplied messages
 impl axum::response::IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
         let (status, message) = match self {
@@ -31,14 +33,17 @@ impl axum::response::IntoResponse for AppError {
     }
 }
 
+// add support for database errors
 impl From<sqlx::Error> for AppError {
     fn from(err: sqlx::Error) -> Self {
         AppError::Database(err)
     }
 }
 
+// add it to the result type
 pub type Result<T> = std::result::Result<T, AppError>;
 
+// database errors
 pub struct DbErrorConfig {
     pub unique_violations: std::collections::HashMap<String, String>,
     pub foreign_key_message: Option<String>,
@@ -46,6 +51,7 @@ pub struct DbErrorConfig {
     pub not_null_message: Option<String>,
 }
 
+// set needed custom error messages
 impl DbErrorConfig {
     pub fn new() -> Self {
         Self {
@@ -78,10 +84,10 @@ impl DbErrorConfig {
     }
 }
 
+// handle the db error and send back the custom string or a default message
 pub fn handle_db_error(error: sqlx::Error, config: DbErrorConfig) -> AppError {
     match error {
         sqlx::Error::Database(db_err) => {
-            // Handle unique constraint violations
             if db_err.is_unique_violation() {
                 if let Some(constraint) = db_err.constraint() {
                     if let Some(custom_msg) = config.unique_violations.get(constraint) {

@@ -1,9 +1,9 @@
 mod api;
 mod db;
 mod error;
+mod middleware;
 mod models;
 mod routes;
-mod middleware;
 
 #[derive(Clone)]
 pub struct AppState {

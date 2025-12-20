@@ -19,3 +19,27 @@ pub async fn register_user(
 
     crate::db::error::users_db_error(result)
 }
+
+pub async fn login_user(
+    pool: &sqlx::PgPool,
+    req: &crate::models::LoginUserRequest,
+) -> crate::error::Result<crate::models::User> {
+    let result: Result<crate::models::User, sqlx::Error> = sqlx::query_as!(
+        crate::models::User,
+        r#"
+        SELECT * FROM users
+                  WHERE username = $1 
+        "#,
+        req.username
+    )
+    .fetch_one(pool)
+    .await;
+
+    if result.is_err() {
+        return Err(crate::error::AppError::NotFound(
+            "Incorrect username".to_string(),
+        ));
+    }
+
+    Ok(result?)
+}

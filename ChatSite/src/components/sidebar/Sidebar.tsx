@@ -12,7 +12,7 @@ function Sidebar(){
         if you want to modify users you need to run setUsers([])
         and provide it with an array
     */
-    const [Users, setUsers] = useState(["test1", "test2", "test3", "dfshdsfhkjldfsajklhdfs"]);
+    const [Users, setUsers] = useState(["test1", "test2", "test3", "dfshdsfhdsfhjkdslhdfs"]);
 
     const navigate = useNavigate();
 

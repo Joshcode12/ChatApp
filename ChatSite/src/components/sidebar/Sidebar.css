@@ -5,7 +5,11 @@ aside.sidebar {
 }
 
 aside.sidebar button {
-    width: 100%
+    width: 100%;
+    font-size: medium;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 aside.sidebar #find {

@@ -1,4 +1,5 @@
 import './Register.css'
+import { globalState } from '../../globalState';
 
 function Register() {
 
@@ -11,7 +12,12 @@ function Register() {
         profile_file_id: UUID | null;
     }
 
-    function RequestRegister() {
+    interface LoginPayload {
+        username: string;
+        password: string;
+    }
+
+    async function RequestRegister() {
         const _username: string = (document.querySelector("#username-box") as HTMLInputElement).value
         const _password: string = (document.querySelector("#password-box") as HTMLInputElement).value
         const _bio: string | null = (document.querySelector("#bio-box") as HTMLInputElement).value.trim() || null;
@@ -26,13 +32,48 @@ function Register() {
         console.log(JSON.stringify(data))
 
         if (_username.length >= 1 && _password.length >= 1) {
-            fetch("http://127.0.0.1:3000/chat/users/register", {
+            const res: Response = await fetch(globalState.url + "chat/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json", // sending JSON
                 },
                 body: JSON.stringify(data)
             })
+            console.log(res);
+            if(res.status == 200){ // OK
+                console.log("Good")
+            } else {
+                console.log("Bad")
+            }
+        }
+    }
+
+    async function RequestLogin(){
+        const _username: string = (document.querySelector("#username-box") as HTMLInputElement).value
+        const _password: string = (document.querySelector("#password-box") as HTMLInputElement).value
+        //const _bio: string | null = (document.querySelector("#bio-box") as HTMLInputElement).value.trim() || null;
+
+        const data: LoginPayload = {
+            username: _username,
+            password: _password
+        }
+
+        console.log(JSON.stringify(data))
+
+        if (_username.length >= 1 && _password.length >= 1) {
+            const res: Response = await fetch(globalState.url + "chat/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", // sending JSON
+                },
+                body: JSON.stringify(data)
+            })
+            console.log(res);
+            if(res.status == 200){ // OK
+                console.log("Good")
+            } else {
+                console.log("Bad")
+            }
         }
     }
 
@@ -41,7 +82,10 @@ function Register() {
             <input type="text" id="username-box" placeholder='Username'/>
             <input type="text" id="password-box" placeholder='Password'/>
             <input type="text" id="bio-box" placeholder='Bio'/>
-            <button onClick={RequestRegister}>Confirm</button>
+            <div>
+                <button onClick={RequestLogin} style={{backgroundColor: "#242"}}>Login</button>
+                <button onClick={RequestRegister} style={{backgroundColor: "#442"}}>Register</button>
+            </div>
         </div>
     )
 }

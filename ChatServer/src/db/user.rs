@@ -22,9 +22,10 @@ pub async fn update_user(
     pool: &sqlx::PgPool,
     req: &crate::models::UpdateUserRequest,
 ) -> crate::error::Result<crate::models::User> {
-    let result: Result<crate::models::User, sqlx::Error> = sqlx::query_as!(
-        crate::models::User,
-        r#"
+    let result: crate::models::User = crate::error::map_db_error(
+        sqlx::query_as!(
+            crate::models::User,
+            r#"
         UPDATE users
         SET
             username = COALESCE($2, username),
@@ -34,14 +35,20 @@ pub async fn update_user(
         WHERE id = $1
         RETURNING *
         "#,
-        req.id,
-        req.username,
-        req.password,
-        req.bio,
-        req.profile_file_id
+            req.id,
+            req.username,
+            req.password,
+            req.bio,
+            req.profile_file_id
+        )
+        .fetch_one(pool),
+        crate::error::DbErrorConfig::new()
+            .unique("users_username_key", "Username already taken")
+            .foreign_key("Invalid profile file ID")
+            .check_violation("Username must be 3-30 characters and bio max 500 characters")
+            .not_null("Username or password cannot be empty"),
     )
-    .fetch_one(pool)
-    .await;
+    .await?;
 
-    crate::db::error::users_db_error(result)
+    Ok(result)
 }

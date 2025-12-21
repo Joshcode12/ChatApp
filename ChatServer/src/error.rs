@@ -128,3 +128,11 @@ pub fn handle_db_error(error: sqlx::Error, config: DbErrorConfig) -> AppError {
         other => AppError::Database(other),
     }
 }
+
+pub async fn map_db_error<T>(
+    fut: impl Future<Output=std::result::Result<T, sqlx::Error>>,
+    config: DbErrorConfig,
+) -> Result<T> {
+    fut.await
+        .map_err(|err| handle_db_error(err, config))
+}

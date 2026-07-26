@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
-import client from "./api/client";
+import { Routes, Route } from "react-router";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import DashboardPage from "./pages/DashboardPage";
 
-function App() {
-  const [health, setHealth] = useState(null);
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
 
-  useEffect(() => {
-    client.get("/health").then((res) => setHealth(res.data));
-  }, []);
-
-  return <pre>{JSON.stringify(health, null, 2)}</pre>;
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<DashboardPage />} />
+      </Route>
+    </Routes>
+  );
 }
-
-export default App;

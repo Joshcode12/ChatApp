@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
 import { getErrorMessage } from "../types/api";
+import { register } from "../api/user";
 
-export default function LoginPage() {
-  const { login } = useAuth();
+export default function RegisterPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,8 +15,9 @@ export default function LoginPage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      await login(username, password);
+      await register({ username, password });
       navigate("/", { replace: true });
+      window.location.reload();
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Log in</h1>
+      <h1>Register</h1>
       {error && <p role="alert">{error}</p>}
       <input
         type="text"
@@ -42,11 +42,11 @@ export default function LoginPage() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        autoComplete="current-password"
+        autoComplete="new-password"
         required
       />
       <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Logging in..." : "Log in"}
+        {isSubmitting ? "Creating account..." : "Register"}
       </button>
     </form>
   );

@@ -27,7 +27,7 @@ All protected paths validate JWT session credentials passed dynamically inside r
 
 ### Core App Base
 
-- `GET /health` — Service health checking and semantic package versioning.
+- `GET /health` - Service health checking and semantic package versioning.
 
 ### Authentication Module (`/auth`)
 

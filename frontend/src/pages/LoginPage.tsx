@@ -28,7 +28,7 @@ export default function LoginPage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Log in</h1>
+      <h1>Login</h1>
 
       <input
         type="text"
@@ -53,7 +53,7 @@ export default function LoginPage() {
       {error && <p role="alert">{error}</p>}
 
       <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Logging in..." : "Log in"}
+        {isSubmitting ? "Logging in..." : "Login"}
       </button>
 
       <button type="button" onClick={() => navigate("/register")}>

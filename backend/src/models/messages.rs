@@ -15,10 +15,14 @@ pub struct CreateMessage {
 }
 
 #[derive(Debug, Serialize)]
-pub struct MessageResponse {
+pub struct CreateMessageResponse {
+    pub id: Uuid,
+    pub username: String,
     pub body: Option<String>,
     pub attachment_key: Option<String>,
     pub attachment_type: Option<String>,
+    #[serde(with = "time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
 }
 
 #[derive(Debug, Deserialize)]

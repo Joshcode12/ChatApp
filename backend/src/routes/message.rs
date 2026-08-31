@@ -10,7 +10,7 @@ use crate::{
     AppState,
     errors::AppError,
     models::{
-        messages::{CreateMessage, GetMessage, GetMessageResponse, MessageResponse},
+        messages::{CreateMessage, CreateMessageResponse, GetMessage, GetMessageResponse},
         tokens::Claims,
     },
 };
@@ -20,18 +20,24 @@ pub async fn create(
     claims: Claims,
     Path(room_id): Path<Uuid>,
     Json(payload): Json<CreateMessage>,
-) -> Result<(StatusCode, Json<MessageResponse>), AppError> {
+) -> Result<(StatusCode, Json<CreateMessageResponse>), AppError> {
     let user_id = claims.sub;
     let message_id = Uuid::now_v7();
 
-    let result = query!(
+    let row = query!(
         r#"
-        INSERT INTO messages (id, room_id, user_id, body, attachment_key, attachment_type)
-        SELECT $1, $2, $3, $4, $5, $6
-        WHERE EXISTS (
-            SELECT 1 FROM room_members
-            WHERE user_id = $3 AND room_id = $2
+        WITH inserted AS (
+            INSERT INTO messages (id, room_id, user_id, body, attachment_key, attachment_type)
+            SELECT $1, $2, $3, $4, $5, $6
+            WHERE EXISTS (
+                SELECT 1 FROM room_members
+                WHERE user_id = $3 AND room_id = $2
+            )
+            RETURNING id, created_at, user_id
         )
+        SELECT i.id, i.created_at, u.username
+        FROM inserted i
+        JOIN users u ON u.id = i.user_id
         "#,
         message_id,
         room_id,
@@ -40,19 +46,19 @@ pub async fn create(
         payload.attachment_key,
         payload.attachment_type
     )
-    .execute(&state.pool)
-    .await?;
-
-    if result.rows_affected() == 0 {
-        return Err(AppError::RoomNotFound);
-    }
+    .fetch_optional(&state.pool)
+    .await?
+    .ok_or(AppError::RoomNotFound)?;
 
     Ok((
         StatusCode::CREATED,
-        Json(MessageResponse {
+        Json(CreateMessageResponse {
+            id: row.id,
+            username: row.username,
             body: payload.body,
             attachment_key: payload.attachment_key,
             attachment_type: payload.attachment_type,
+            created_at: row.created_at,
         }),
     ))
 }

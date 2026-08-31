@@ -1,6 +1,5 @@
 use argon2::{
-    Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
-    password_hash::{self, SaltString, rand_core::OsRng},
+    Argon2, PasswordHash, PasswordHasher, PasswordVerifier, password_hash::{self, phc::SaltString},
 };
 use serde::{Deserialize, Deserializer};
 use tokio::task;
@@ -12,19 +11,16 @@ pub fn trimmed_string<'de, D: Deserializer<'de>>(d: D) -> Result<String, D::Erro
 
 pub fn trimmed_option<'de, D: Deserializer<'de>>(d: D) -> Result<Option<String>, D::Error> {
     let opt = Option::<String>::deserialize(d)?;
-
     let cleaned = opt.map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
-
     Ok(cleaned)
 }
 
 pub async fn password_hash(password: String) -> Result<String, password_hash::Error> {
     task::spawn_blocking(move || {
-        let salt = SaltString::generate(&mut OsRng);
-
+        let salt = SaltString::generate();
         let argon2 = Argon2::default();
         argon2
-            .hash_password(password.as_bytes(), &salt)
+            .hash_password_with_salt(password.as_bytes(), &salt.to_salt())
             .map(|h| h.to_string())
     })
     .await
@@ -43,10 +39,10 @@ pub async fn password_verify(
 
         match verification_result {
             Ok(_) => Ok(true),
-            Err(argon2::password_hash::Error::Password) => Ok(false),
+            Err(argon2::password_hash::Error::PasswordInvalid) => Ok(false),
             Err(e) => Err(e),
         }
     })
     .await
-    .unwrap_or(Err(argon2::password_hash::Error::Crypto))
+    .unwrap_or(Err(password_hash::Error::Crypto))
 }

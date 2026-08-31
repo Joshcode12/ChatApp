@@ -4,11 +4,6 @@ use validator::Validate;
 
 use crate::utils::{trimmed_option, trimmed_string};
 
-#[derive(Debug, Serialize)]
-pub struct UserResponse {
-    pub username: String,
-}
-
 #[derive(Debug, Validate, Deserialize)]
 pub struct RegisterUser {
     #[serde(deserialize_with = "trimmed_string")]
